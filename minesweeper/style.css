@@ -3,6 +3,8 @@
   --cell-width: 24px;
   --grid-cols: 30;
   --grid-rows: 16;
+
+  --light-gray: #aaa;
 }
 
 * {
@@ -38,4 +40,29 @@ h1 {
   width: calc(var(--cell-width) * var(--grid-cols));
   margin: auto;
   background-color: gray;
+}
+
+.cell-row {
+  display: flex;
+}
+
+.mine-cell {
+  display: flex;
+  & button {
+    flex: 1;
+    display: block;
+    height: var(--cell-width);
+    width: var(--cell-width);
+    border: 1px solid var(--light-gray);
+
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background-color: white;
+    }
+
+    &:disabled {
+      cursor: default;
+    }
+  }
 }
