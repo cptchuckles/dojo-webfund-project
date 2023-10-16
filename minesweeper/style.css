@@ -1,6 +1,6 @@
 :root {
   --content-width: 800px;
-  --cell-width: 24px;
+  --cell-width: 25px;
   --grid-cols: 30;
   --grid-rows: 16;
 
