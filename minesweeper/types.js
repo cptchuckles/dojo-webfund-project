@@ -1,82 +1,60 @@
-if ("content" in document.createElement("template")) {
-  const cellTemplate = document.getElementById("cell-template");
+class MinefieldCell extends HTMLButtonElement {
+  /// Callback: Function(Array) -> Void
+  emitPressed = (arr) => { return; };
 
-  class MinefieldCell extends HTMLElement {
-    static cells = 0;
+  hasMine = false;
+  cell = { row: undefined, col: undefined };
 
-    /// Callback: Function(Array) -> Void
-    emitPressed = (arr) => { return; };
-
-    hasMine = false;
-
-    constructor() {
-      super();
-    }
-
-    connectedCallback() {
-      const clone = cellTemplate.content.cloneNode(true);
-
-      const div = clone.children[0];
-      div.setAttribute("data-cell", String(MinefieldCell.cells));
-
-      const button = div.children[0];
-      button.addEventListener("click", () => this.pressButton());
-
-      this.appendChild(clone);
-
-      MinefieldCell.cells++;
-    }
-
-    disconnectedCallback() {
-      MinefieldCell.cells--;
-    }
-
-    disable() {
-      this.getButton().setAttribute("disabled", true);
-    }
-
-    isDisabled() {
-      return this.getButton().getAttribute("disabled");
-    }
-
-    getButton() {
-      return this.children[0].children[0];
-    }
-
-    pressButton() {
-      if (this.isDisabled()) {
-        return;
-      }
-      this.disable();
-      this.returnNeighbors();
-    }
-
-    setCellCoord(row, col) {
-      const cell = [row, col].join(",");
-      this.setAttribute("data-cell", cell);
-    }
-
-    connectPressed(cb) {
-      this.emitPressed = cb;
-    }
-
-    returnNeighbors() {
-      const neighbors = [];
-      const [row, col] = this.getAttribute("data-cell").split(",").map(n => Number(n));
-      for (let r=row-1; r<=row+1; r++) {
-        for (let c=col-1; c<=col+1; c++) {
-          if (r===row && c===col) {
-            continue;
-          }
-          neighbors.push({row: r, col: c});
-        }
-      }
-      this.emitPressed(neighbors);
-    }
+  constructor() {
+    super();
   }
 
-  customElements.define("minefield-cell", MinefieldCell);
+  connectedCallback() {
+    this.addEventListener("click", () => this.pressButton());
+  }
+
+  disable() {
+    this.toggleAttribute("disabled", true);
+  }
+
+  isDisabled() {
+    return this.getAttribute("disabled");
+  }
+
+  setAsMine() {
+    this.hasMine = true;
+  }
+
+  pressButton() {
+    if (this.isDisabled()) {
+      return;
+    }
+    this.disable();
+    this.returnNeighbors();
+  }
+
+  setCellCoord(row, col) {
+    this.cell.row = row;
+    this.cell.col = col;
+  }
+
+  connectPressed(cb) {
+    this.emitPressed = cb;
+  }
+
+  returnNeighbors() {
+    const neighbors = [];
+    const {row, col} = this.cell;
+    for (let r=row-1; r<=row+1; r++) {
+      for (let c=col-1; c<=col+1; c++) {
+        if (r===row && c===col) {
+          continue;
+        }
+        neighbors.push({row: r, col: c});
+      }
+    }
+    this.emitPressed(neighbors);
+  }
 }
-else {
-  console.error("HTML Templates are not supported");
-}
+
+customElements.define("minefield-cell", MinefieldCell, { extends: "button" });

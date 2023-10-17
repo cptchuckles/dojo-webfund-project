@@ -44,10 +44,7 @@ h1 {
 
 .cell-row {
   display: flex;
-}
 
-.mine-cell {
-  display: flex;
   & button {
     flex: 1;
     display: block;

@@ -15,7 +15,7 @@ function buildGrid() {
     row.classList.add("cell-row");
 
     for (let c=0; c<cols; c++) {
-      const cell = document.createElement("minefield-cell");
+      const cell = document.createElement("button", { is: "minefield-cell" });
       row.appendChild(cell);
       cell.setCellCoord(r, c);
       cell.connectPressed(onCellButtonPressed);
@@ -31,15 +31,20 @@ function populateMines(ignore = -1) {
       // Choose again
       idx = Math.floor(Math.random() * rows * cols);
     }
-    cells[idx].hasMine = true;
-    cells[idx].connectPressed(() => alert("YOU DIED"));
+    cells[idx].setAsMine();
+    cells[idx].connectPressed(gameOver);
   }
+}
+
+function gameOver() {
+  alert("YOU DIED");
+  // disable clicking or something
 }
 
 function onCellButtonPressed(neighbors) {
   if (firstBlood) {
     firstBlood = false;
-    const [row, col] = this.getAttribute("data-cell").split(",").map(n => Number(n));
+    const {row, col} = this.cell;
     const idx = row * cols + col;
     populateMines(idx);
   }
@@ -68,7 +73,7 @@ function onCellButtonPressed(neighbors) {
     }
   }
   else {
-    this.getButton().textContent = String(neighborMines);
+    this.textContent = String(neighborMines);
   }
 }
 
