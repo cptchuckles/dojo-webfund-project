@@ -6,6 +6,8 @@ const mines = 99;
 
 const cells = []
 
+let firstBlood = true;
+
 function buildGrid() {
   for (let r=0; r<rows; r++) {
     const row = document.createElement("div");
@@ -20,14 +22,12 @@ function buildGrid() {
       cells.push(cell);
     }
   }
-
-  populateMines();
 }
 
-function populateMines() {
+function populateMines(ignore = -1) {
   for (let m=0; m<mines; m++) {
     let idx = Math.floor(Math.random() * rows * cols);
-    while (cells[idx].hasMine) {
+    while (idx === ignore || cells[idx].hasMine) {
       // Choose again
       idx = Math.floor(Math.random() * rows * cols);
     }
@@ -37,6 +37,13 @@ function populateMines() {
 }
 
 function onCellButtonPressed(neighbors) {
+  if (firstBlood) {
+    firstBlood = false;
+    const [row, col] = this.getAttribute("data-cell").split(",").map(n => Number(n));
+    const idx = row * cols + col;
+    populateMines(idx);
+  }
+
   neighbors = neighbors.filter(n => {
     return (0 <= n.row && n.row < rows) && (0 <= n.col && n.col < cols);
   }).map(n => {
