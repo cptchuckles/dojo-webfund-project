@@ -61,6 +61,10 @@ h1 {
     &:disabled {
       cursor: default;
       color: black;
+
+      &:is(.has-mine) {
+        background-color: firebrick;
+      }
     }
   }
 }

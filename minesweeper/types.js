@@ -23,6 +23,7 @@ class MinefieldCell extends HTMLButtonElement {
 
   setAsMine() {
     this.hasMine = true;
+    this.classList.add("has-mine");
   }
 
   pressButton() {
