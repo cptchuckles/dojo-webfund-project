@@ -63,6 +63,7 @@ h1 {
 
     &:disabled {
       cursor: default;
+      color: black;
     }
   }
 }
