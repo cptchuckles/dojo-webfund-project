@@ -1,8 +1,8 @@
 :root {
-  --content-width: 800px;
-  --cell-width: 25px;
+  --content-width: 1200px;
   --grid-cols: 30;
   --grid-rows: 16;
+  --cell-width: calc(var(--content-width) / var(--grid-cols));
 
   --light-gray: #aaa;
 }
