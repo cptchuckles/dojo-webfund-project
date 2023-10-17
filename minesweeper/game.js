@@ -38,7 +38,9 @@ function populateMines(ignore = -1) {
 
 function gameOver() {
   alert("YOU DIED");
-  // disable clicking or something
+  for (const cell of cells) {
+    cell.disable();
+  }
 }
 
 function onCellButtonPressed(neighbors) {

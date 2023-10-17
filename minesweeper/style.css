@@ -54,16 +54,27 @@ h1 {
 
     cursor: pointer;
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled, .flagged) {
       background-color: white;
+    }
+
+    &:is(.flagged) {
+      background-color: teal;
     }
 
     &:disabled {
       cursor: default;
       color: black;
 
+      &:is(.flagged) {
+        background-color: black;
+      }
+
       &:is(.has-mine) {
         background-color: firebrick;
+        &:is(.flagged) {
+          background-color: purple;
+        }
       }
     }
   }

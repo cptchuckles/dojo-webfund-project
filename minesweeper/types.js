@@ -11,6 +11,21 @@ class MinefieldCell extends HTMLButtonElement {
 
   connectedCallback() {
     this.addEventListener("click", () => this.pressButton());
+    this.addEventListener("contextmenu", ev => {
+      ev.preventDefault();
+      this.flag();
+    })
+  }
+
+  flag() {
+    if (this.isDisabled()) {
+      return;
+    }
+    this.classList.toggle("flagged");
+  }
+
+  isFlagged() {
+    return this.classList.contains("flagged");
   }
 
   disable() {
@@ -18,7 +33,7 @@ class MinefieldCell extends HTMLButtonElement {
   }
 
   isDisabled() {
-    return this.getAttribute("disabled");
+    return this.getAttribute("disabled") !== null;
   }
 
   setAsMine() {
@@ -27,11 +42,11 @@ class MinefieldCell extends HTMLButtonElement {
   }
 
   pressButton() {
-    if (this.isDisabled()) {
+    if (this.isDisabled() || this.isFlagged()) {
       return;
     }
     this.disable();
-    this.returnNeighbors();
+    this.processNeighbors();
   }
 
   setCellCoord(row, col) {
@@ -43,7 +58,7 @@ class MinefieldCell extends HTMLButtonElement {
     this.emitPressed = cb;
   }
 
-  returnNeighbors() {
+  processNeighbors() {
     const neighbors = [];
     const {row, col} = this.cell;
     for (let r=row-1; r<=row+1; r++) {
