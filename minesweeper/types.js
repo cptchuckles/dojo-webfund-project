@@ -7,6 +7,8 @@ if ("content" in document.createElement("template")) {
     /// Callback: Function(Array) -> Void
     emitPressed = (arr) => { return; };
 
+    hasMine = false;
+
     constructor() {
       super();
     }
