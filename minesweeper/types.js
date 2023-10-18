@@ -17,11 +17,11 @@ class MinefieldCell extends HTMLButtonElement {
     })
   }
 
-  flag() {
+  flag(force) {
     if (this.isDisabled()) {
       return;
     }
-    this.classList.toggle("flagged");
+    this.classList.toggle("flagged", force);
   }
 
   isFlagged() {
