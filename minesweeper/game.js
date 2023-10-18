@@ -38,9 +38,20 @@ function buildGrid() {
 }
 
 function populateMines(ignore = -1) {
+  let ignores = []
+  if (ignore > 0) {
+    for (let r=-1; r<=1; r++) {
+      for (let c=-1; c<=1; c++) {
+        let idx = ignore + r*cols + c
+        if (0 <= idx && idx < cells.length) {
+          ignores.push(idx);
+        }
+      }
+    }
+  }
   for (let m=0; m<mines; m++) {
     let idx = Math.floor(Math.random() * rows * cols);
-    while (idx === ignore || cells[idx].hasMine) {
+    while (cells[idx].hasMine || ignores.includes(idx)) {
       // Choose again
       idx = Math.floor(Math.random() * rows * cols);
     }
