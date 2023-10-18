@@ -89,6 +89,10 @@ h1 {
   }
 }
 
+fieldset {
+  padding: .5em;
+}
+
 .legend {
   display: flex;
   justify-content: space-between;
