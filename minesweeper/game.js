@@ -19,6 +19,7 @@ const colorList = [
 
 let firstBlood = true;
 let won = false;
+let winCheck = 0;
 
 function buildGrid() {
   for (let r=0; r<rows; r++) {
@@ -54,16 +55,26 @@ function gameOver() {
   cells.forEach(cell => cell.disable());
 }
 
+function countDownToWinCheck() {
+  winCheck--;
+  if (winCheck === 0) {
+    checkWinCondition();
+  }
+}
+
 function checkWinCondition() {
   if (won) {
     return;
   }
+
   for (const cell of cells) {
     if (!cell.hasMine && !cell.isDisabled()) {
       return;
     }
   }
+
   won = true;
+
   for (const cell of cells) {
     cell.flag(cell.hasMine);
     cell.disable();
@@ -106,7 +117,8 @@ function onCellButtonPressed(neighbors) {
     this.setNumberText(neighborMines);
   }
 
-  setTimeout(() => checkWinCondition());
+  winCheck++;
+  setTimeout(() => countDownToWinCheck());
 }
 
 buildGrid();
