@@ -6,6 +6,17 @@ const mines = 99;
 
 const cells = []
 
+const colorList = [
+  "#00a", // 1
+  "#060", // 2
+  "#a00", // 3
+  "#505", // 4
+  "#0a0", // 5
+  "#b40", // 6
+  "#a05", // 7
+  "#aa0", // 8
+]
+
 let firstBlood = true;
 
 function buildGrid() {
@@ -38,6 +49,9 @@ function populateMines(ignore = -1) {
 
 function gameOver() {
   alert("YOU DIED");
+  this.style.backgroundColor = "var(--exploded-color)";
+  cells.forEach(cell => cell.disable());
+}
   for (const cell of cells) {
     cell.disable();
   }
@@ -75,7 +89,7 @@ function onCellButtonPressed(neighbors) {
     }
   }
   else {
-    this.textContent = String(neighborMines);
+    this.setNumberText(neighborMines);
   }
 }
 

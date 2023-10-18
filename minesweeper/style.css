@@ -5,6 +5,12 @@
   --cell-width: calc(var(--content-width) / var(--grid-cols));
 
   --light-gray: #aaa;
+
+  --flagged-color: teal;
+  --mine-color: firebrick;
+  --flagged-mine-color: purple;
+  --false-mine-color: black;
+  --exploded-color: #fd0;
 }
 
 * {
@@ -38,7 +44,7 @@ h1 {
 #minefield {
   height: calc(var(--cell-width) * var(--grid-rows));
   width: calc(var(--cell-width) * var(--grid-cols));
-  margin: auto;
+  margin: 1em auto;
   background-color: gray;
 }
 
@@ -51,6 +57,9 @@ h1 {
     height: var(--cell-width);
     width: var(--cell-width);
     border: 1px solid var(--light-gray);
+    font-weight: 777;
+    font-size: calc(0.7 * var(--cell-width));
+    /* text-shadow: 1px 1px black; */
 
     cursor: pointer;
 
@@ -59,7 +68,7 @@ h1 {
     }
 
     &:is(.flagged) {
-      background-color: teal;
+      background-color: var(--flagged-color);
     }
 
     &:disabled {
@@ -67,15 +76,48 @@ h1 {
       color: black;
 
       &:is(.flagged) {
-        background-color: black;
+        background-color: var(--false-mine-color);
       }
 
       &:is(.has-mine) {
-        background-color: firebrick;
+        background-color: var(--mine-color);
         &:is(.flagged) {
-          background-color: purple;
+          background-color: var(--flagged-mine-color);
         }
       }
+    }
+  }
+}
+
+.legend {
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+
+  & > li {
+    flex: 1;
+    list-style: none;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px;
+    color: white;
+    box-shadow: 2px 2px black;
+
+    &.flag {
+      background-color: var(--flagged-color);
+    }
+    &.mine {
+      background-color: var(--mine-color);
+    }
+    &.flagged-mine {
+      background-color: var(--flagged-mine-color);
+    }
+    &.false-mine {
+      background-color: var(--false-mine-color);
+    }
+    &.exploded {
+      background-color: var(--exploded-color);
+      color: black;
     }
   }
 }

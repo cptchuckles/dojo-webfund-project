@@ -28,6 +28,11 @@ class MinefieldCell extends HTMLButtonElement {
     return this.classList.contains("flagged");
   }
 
+  setNumberText(n, colorList = []) {
+    this.textContent = String(n);
+    this.style.color = colorList[n-1] || "black";
+  }
+
   disable() {
     this.toggleAttribute("disabled", true);
   }
