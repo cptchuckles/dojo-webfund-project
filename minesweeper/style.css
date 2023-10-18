@@ -41,10 +41,34 @@ h1 {
   margin: auto;
 }
 
+.toolbar {
+  display: flex;
+  justify-content: space-around;
+  padding: 1em;
+  background-color: #777;
+
+  & button {
+    font-size: 1.25em;
+    padding: 1ch;
+  }
+}
+
+.digital-display {
+  color: firebrick;
+  background-color: black;
+  padding: 5px;
+
+  font-size: 1.5rem;
+  font-weight: 999;
+  font-family: monospace;
+  text-align: right;
+  min-width: 5ch;
+}
+
 #minefield {
   height: calc(var(--cell-width) * var(--grid-rows));
   width: calc(var(--cell-width) * var(--grid-cols));
-  margin: 1em auto;
+  margin-bottom: 1em;
   background-color: gray;
 }
 

@@ -1,8 +1,11 @@
 class MinefieldCell extends HTMLButtonElement {
   /// Callback: Function(Array) -> Void
   emitPressed = (arr) => { return; };
+  /// Callback: Function(Void) -> Void:
+  emitFlagged = () => { return; };
 
   hasMine = false;
+  flagged = false;
   cell = { row: undefined, col: undefined };
 
   constructor() {
@@ -17,15 +20,21 @@ class MinefieldCell extends HTMLButtonElement {
     })
   }
 
+  connectPressed(cb) {
+    this.emitPressed = cb;
+  }
+
   flag(force) {
     if (this.isDisabled()) {
       return;
     }
-    this.classList.toggle("flagged", force);
+    this.flagged = force || !this.flagged;
+    this.classList.toggle("flagged", this.flagged);
+    this.emitFlagged();
   }
 
-  isFlagged() {
-    return this.classList.contains("flagged");
+  connectFlagged(cb) {
+    this.emitFlagged = cb;
   }
 
   setNumberText(n, colorList = []) {
@@ -47,7 +56,7 @@ class MinefieldCell extends HTMLButtonElement {
   }
 
   pressButton() {
-    if (this.isDisabled() || this.isFlagged()) {
+    if (this.isDisabled() || this.flagged) {
       return;
     }
     this.disable();
@@ -57,10 +66,6 @@ class MinefieldCell extends HTMLButtonElement {
   setCellCoord(row, col) {
     this.cell.row = row;
     this.cell.col = col;
-  }
-
-  connectPressed(cb) {
-    this.emitPressed = cb;
   }
 
   processNeighbors() {

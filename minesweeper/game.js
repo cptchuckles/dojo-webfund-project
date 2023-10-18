@@ -1,11 +1,5 @@
 const minefield = document.getElementById("minefield");
 
-const rows = 16;
-const cols = 30;
-const mines = 99;
-
-const cells = []
-
 const colorList = [
   "#00a", // 1
   "#060", // 2
@@ -17,119 +11,178 @@ const colorList = [
   "#aa0", // 8
 ]
 
-let firstBlood = true;
-let won = false;
-let winCheck = 0;
+class MinesweeperGame {
+  rows = 16;
+  cols = 30;
+  cells = [];
+  finished = false;
+  firstBlood = true;
+  winCheck = 0;
 
-function buildGrid() {
-  for (let r=0; r<rows; r++) {
-    const row = document.createElement("div");
-    minefield.appendChild(row);
-    row.classList.add("cell-row");
+  mines = 99;
+  minesDisplay = document.getElementById("mine-count");
+  timer = 0;
+  timerDisplay = document.getElementById("timer");
 
-    for (let c=0; c<cols; c++) {
-      const cell = document.createElement("button", { is: "minefield-cell" });
-      row.appendChild(cell);
-      cell.setCellCoord(r, c);
-      cell.connectPressed(onCellButtonPressed);
-      cells.push(cell);
+  constructor() {
+    this.buildGrid();
+    this.updateMinesDisplay();
+    this.updateTimerDisplay();
+  }
+
+  updateMinesDisplay() {
+    this.minesDisplay.textContent = String(this.mines);
+  }
+
+  updateMines(delta) {
+    this.mines += delta;
+    this.updateMinesDisplay();
+  }
+
+  updateTimerDisplay() {
+    this.timerDisplay.textContent = String(this.timer);
+  }
+
+  startTimer() {
+    setTimeout(() => this.timerTick(), 1000);
+  }
+
+  timerTick() {
+    if (this.finished || game !== this) {
+      return;
+    }
+    this.timer++;
+    this.updateTimerDisplay();
+    setTimeout(() => this.timerTick(), 1000);
+  }
+
+  buildGrid() {
+    for (let r=0; r<this.rows; r++) {
+      const row = document.createElement("div");
+      minefield.appendChild(row);
+      row.classList.add("cell-row");
+
+      for (let c=0; c<this.cols; c++) {
+        const cell = document.createElement("button", { is: "minefield-cell" });
+        row.appendChild(cell);
+        cell.setCellCoord(r, c);
+        cell.connectPressed(this.onCellPressed);
+        cell.connectFlagged(this.onCellFlagged);
+        this.cells.push(cell);
+      }
     }
   }
-}
 
-function populateMines(ignore = -1) {
-  let ignores = []
-  if (ignore > 0) {
-    for (let r=-1; r<=1; r++) {
-      for (let c=-1; c<=1; c++) {
-        let idx = ignore + r*cols + c
-        if (0 <= idx && idx < cells.length) {
-          ignores.push(idx);
+  populateMines(ignore = -1) {
+    let ignores = []
+    if (ignore > 0) {
+      for (let r=-1; r<=1; r++) {
+        for (let c=-1; c<=1; c++) {
+          let idx = ignore + r*this.cols + c
+          if (0 <= idx && idx < this.cells.length) {
+            ignores.push(idx);
+          }
         }
       }
     }
-  }
-  for (let m=0; m<mines; m++) {
-    let idx = Math.floor(Math.random() * rows * cols);
-    while (cells[idx].hasMine || ignores.includes(idx)) {
-      // Choose again
-      idx = Math.floor(Math.random() * rows * cols);
+    for (let m=0; m<this.mines; m++) {
+      let idx = Math.floor(Math.random() * this.rows * this.cols);
+      while (this.cells[idx].hasMine || ignores.includes(idx)) {
+        // Choose again
+        idx = Math.floor(Math.random() * this.rows * this.cols);
+      }
+      this.cells[idx].setAsMine();
+      this.cells[idx].connectPressed(this.gameOver);
     }
-    cells[idx].setAsMine();
-    cells[idx].connectPressed(gameOver);
-  }
-}
-
-function gameOver() {
-  alert("YOU DIED");
-  this.style.backgroundColor = "var(--exploded-color)";
-  cells.forEach(cell => cell.disable());
-}
-
-function countDownToWinCheck() {
-  winCheck--;
-  if (winCheck === 0) {
-    checkWinCondition();
-  }
-}
-
-function checkWinCondition() {
-  if (won) {
-    return;
   }
 
-  for (const cell of cells) {
-    if (!cell.hasMine && !cell.isDisabled()) {
+  gameOver() {
+    alert("YOU DIED");
+    this.style.backgroundColor = "var(--exploded-color)";
+    game.cells.forEach(cell => cell.disable());
+    game.finished = true;
+  }
+
+  countDownToWinCheck() {
+    this.winCheck--;
+    if (this.winCheck === 0) {
+      this.checkWinCondition();
+    }
+  }
+
+  checkWinCondition() {
+    if (this.finished) {
       return;
     }
-  }
 
-  won = true;
-
-  for (const cell of cells) {
-    cell.flag(cell.hasMine);
-    cell.disable();
-  }
-  setTimeout(() => alert("you win!!!1"), 0);
-}
-
-function onCellButtonPressed(neighbors) {
-  if (firstBlood) {
-    firstBlood = false;
-    const {row, col} = this.cell;
-    const idx = row * cols + col;
-    populateMines(idx);
-  }
-
-  neighbors = neighbors.filter(n => {
-    return (0 <= n.row && n.row < rows) && (0 <= n.col && n.col < cols);
-  }).map(n => {
-    const idx = n.row * cols + n.col;
-    return cells[idx];
-  });
-
-  let neighborMines = 0;
-
-  for (let neighbor of neighbors) {
-    if (neighbor.hasMine) {
-      neighborMines++;
-    }
-  }
-
-  if (neighborMines == 0) {
-    for (let neighbor of neighbors) {
-      if (neighbor.isDisabled()) {
-        continue;
+    for (const cell of this.cells) {
+      if (!cell.hasMine && !cell.isDisabled()) {
+        return;
       }
-      setTimeout(() => neighbor.pressButton(), 0);
     }
-  }
-  else {
-    this.setNumberText(neighborMines);
+
+    this.finished = true;
+
+    for (const cell of this.cells) {
+      cell.flag(cell.hasMine, true);
+      cell.disable();
+    }
+
+    this.updateMines(-this.mines);
+    setTimeout(() => alert("you win!!!1"), 0);
   }
 
-  winCheck++;
-  setTimeout(() => countDownToWinCheck());
+  onCellPressed(neighbors) {
+    if (game.firstBlood) {
+      game.firstBlood = false;
+      const {row, col} = this.cell;
+      const idx = row * game.cols + col;
+      game.populateMines(idx);
+      game.startTimer();
+    }
+
+    neighbors = neighbors.filter(n => {
+      return (0 <= n.row && n.row < game.rows) && (0 <= n.col && n.col < game.cols);
+    }).map(n => {
+      const idx = n.row * game.cols + n.col;
+      return game.cells[idx];
+    });
+
+    let neighborMines = 0;
+
+    for (let neighbor of neighbors) {
+      if (neighbor.hasMine) {
+        neighborMines++;
+      }
+    }
+
+    if (neighborMines == 0) {
+      for (let neighbor of neighbors) {
+        if (neighbor.isDisabled()) {
+          continue;
+        }
+        setTimeout(() => neighbor.pressButton(), 0);
+      }
+    }
+    else {
+      this.setNumberText(neighborMines);
+    }
+
+    game.winCheck++;
+    setTimeout(() => game.countDownToWinCheck());
+  }
+
+  onCellFlagged() {
+    game.updateMines(this.flagged ? -1 : 1);
+  }
 }
 
-buildGrid();
+function newGame() {
+  Array.from(document.getElementById("minefield").childNodes)
+       .forEach(child => child.remove());
+  game = new MinesweeperGame();
+}
+
+let game = new MinesweeperGame();
+
+document.getElementById("reset").addEventListener("click", () => newGame());
