@@ -1,4 +1,7 @@
 const minefield = document.getElementById("minefield");
+const minesDisplay = document.getElementById("mine-count");
+const timerDisplay = document.getElementById("timer");
+const startingMines = 99;
 
 const colorList = [
   "#00a", // 1
@@ -19,10 +22,8 @@ class MinesweeperGame {
   firstBlood = true;
   winCheck = 0;
 
-  mines = 99;
-  minesDisplay = document.getElementById("mine-count");
+  mines = startingMines;
   timer = 0;
-  timerDisplay = document.getElementById("timer");
 
   constructor() {
     this.buildGrid();
@@ -31,7 +32,7 @@ class MinesweeperGame {
   }
 
   updateMinesDisplay() {
-    this.minesDisplay.textContent = String(this.mines);
+    minesDisplay.textContent = String(this.mines);
   }
 
   updateMines(delta) {
@@ -40,7 +41,7 @@ class MinesweeperGame {
   }
 
   updateTimerDisplay() {
-    this.timerDisplay.textContent = String(this.timer);
+    timerDisplay.textContent = String(this.timer);
   }
 
   startTimer() {
@@ -85,7 +86,7 @@ class MinesweeperGame {
         }
       }
     }
-    for (let m=0; m<this.mines; m++) {
+    for (let m=0; m<startingMines; m++) {
       let idx = Math.floor(Math.random() * this.rows * this.cols);
       while (this.cells[idx].hasMine || ignores.includes(idx)) {
         // Choose again
