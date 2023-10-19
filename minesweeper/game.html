@@ -8,6 +8,13 @@
 	</head>
 	<body>
 		<!-- custom element registration -->
+		<template id="high-score">
+			<div class="score">
+				<p class="place"></p>
+				<p class="name"></p>
+				<p class="time"></p>
+			</div>
+		</template>
 		<script src="types.js"></script>
 
 		<!-- Light content -->
@@ -38,6 +45,15 @@
 					<li class="exploded">Exploded Mine</li>
 				</ul>
 			</fieldset>
+		</div>
+		<div class="content">
+			<h2>Best Times</h2>
+			<div id="hiscores">
+				<high-score name="grendel" time="201"></high-score>
+				<high-score name="grendel" time="202"></high-score>
+				<high-score name="grendel" time="203"></high-score>
+				<high-score name="grendel" time="204"></high-score>
+			</div>
 		</div>
 		<script src="game.js"></script>
 	</body>

@@ -5,6 +5,8 @@
   --cell-width: calc(var(--content-width) / var(--grid-cols));
 
   --light-gray: #aaa;
+  --lighter-gray: #bbb;
+  --dark-gray: #555;
 
   --flagged-color: teal;
   --mine-color: firebrick;
@@ -29,16 +31,15 @@ header {
   padding: 1em;
   background-color: gray;
   font-size: 1.5rem;
-  margin-bottom: 1em;
 }
 
-h1 {
+h1, h2 {
   text-align: center;
 }
 
 .content {
   max-width: var(--content-width);
-  margin: auto;
+  margin: 2em auto;
 }
 
 .toolbar {
@@ -146,6 +147,38 @@ fieldset {
     &.exploded {
       background-color: var(--exploded-color);
       color: black;
+    }
+  }
+}
+
+#hiscores {
+  width: 50%;
+  min-width: fit-content;
+  margin: auto;
+  overflow: clip;
+
+  border-radius: .5em;
+  background-color: var(--light-gray);
+
+  font-size: 1.2rem;
+
+  & .score {
+    display: flex;
+    justify-content: space-between;
+    padding: 1em;
+    border-bottom: 1px solid var(--dark-gray);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:nth-child(odd) {
+      background-color: var(--lighter-gray);
+    }
+
+    & .name {
+      flex: 1;
+      margin-left: 2ch;
     }
   }
 }

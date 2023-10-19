@@ -82,5 +82,33 @@ class MinefieldCell extends HTMLButtonElement {
     this.emitPressed(neighbors);
   }
 }
-
 customElements.define("minefield-cell", MinefieldCell, { extends: "button" });
+
+customElements.define("high-score", class HighScore extends HTMLElement {
+  static place = 0;
+
+  name = "";
+  time = Infinity;
+
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    HighScore.place++;
+
+    const scoreTemplate = document.getElementById("high-score");
+    const scoreContentFragment = scoreTemplate.content.cloneNode(true);
+    const scoreContent = scoreContentFragment.children[0];
+
+    const placeTag = scoreContent.children[0];
+    const nameTag = scoreContent.children[1];
+    const timeTag = scoreContent.children[2];
+
+    placeTag.textContent = String(HighScore.place) + ".";
+    nameTag.textContent = this.getAttribute("name") || this.name;
+    timeTag.textContent = this.getAttribute("time") || String(this.time);
+
+    this.replaceWith(scoreContent);
+  }
+});
