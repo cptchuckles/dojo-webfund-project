@@ -38,9 +38,16 @@ function connectToFirestore() {
 
     app = initializeApp(firebaseConfig);
     db = getFirestore(app);
+
+    onGameWin = () => {
+      if (window.game.isWon) {
+        recordHighScore();
+      }
+    }
   }
   catch(e) {
-    alert("Wrong password, playing offline");
+    console.error("Could not connect to Firebase:", e);
+    alert("Playing offline");
     leaderboard.innerHTML = "<h3>Could not connect to Firebase</h3>";
   }
 }
@@ -66,6 +73,23 @@ async function fetchHighScores(scoresArray) {
   return true;
 }
 
+async function recordHighScore() {
+  const name = prompt("You win! Record your high score:");
+
+  try {
+    const docRef = await addDoc(collection(db, "minesweeper-scores"), {
+      name: name,
+      time: window.game.timer,
+    });
+  }
+  catch(e) {
+    console.error("Error recording high score:", e);
+    return;
+  }
+
+  await updateLeaderboard();
+}
+
 async function updateLeaderboard() {
   if (!await fetchHighScores(scores)) {
     return;
@@ -73,9 +97,13 @@ async function updateLeaderboard() {
 
   clearLeaderboard();
 
-  scores.slice(0, 10).forEach(score => {
+  scores.forEach(score => {
     leaderboard.appendChild(score);
   });
+
+  while (scores.length > 0) {
+    scores.pop();
+  }
 }
 
 connectToFirestore();

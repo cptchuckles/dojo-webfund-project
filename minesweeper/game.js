@@ -14,13 +14,17 @@ const colorList = [
   "#aa0", // 8
 ]
 
+/// Callback: Function(Void) -> Void
+let onGameWin = () => { return; };
+
 class MinesweeperGame {
   rows = 16;
   cols = 30;
   cells = [];
   finished = false;
   firstBlood = true;
-  winCheck = 0;
+  clickRecursions = 0;
+  isWon = false;
 
   mines = startingMines;
   timer = 0;
@@ -105,8 +109,8 @@ class MinesweeperGame {
   }
 
   countDownToWinCheck() {
-    this.winCheck--;
-    if (this.winCheck === 0) {
+    this.clickRecursions--;
+    if (this.clickRecursions === 0) {
       this.checkWinCondition();
     }
   }
@@ -129,8 +133,9 @@ class MinesweeperGame {
       cell.disable();
     }
 
+    this.isWon = true;
     this.updateMines(-this.mines);
-    setTimeout(() => alert("you win!!!1"), 0);
+    onGameWin();
   }
 
   onCellPressed(neighbors) {
@@ -169,7 +174,7 @@ class MinesweeperGame {
       this.setNumberText(neighborMines);
     }
 
-    game.winCheck++;
+    game.clickRecursions++;
     setTimeout(() => game.countDownToWinCheck());
   }
 
@@ -184,6 +189,6 @@ function newGame() {
   game = new MinesweeperGame();
 }
 
-let game = new MinesweeperGame();
+window.game = new MinesweeperGame();
 
 document.getElementById("reset").addEventListener("click", () => newGame());

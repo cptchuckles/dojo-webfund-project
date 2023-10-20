@@ -120,5 +120,9 @@ class HighScore extends HTMLElement {
 
     this.appendChild(scoreContent);
   }
+
+  disconnectedCallback() {
+    HighScore.place--;
+  }
 }
 customElements.define("high-score", HighScore);
