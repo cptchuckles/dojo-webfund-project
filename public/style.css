@@ -1,0 +1,76 @@
+:root {
+  --content-width: 1000px;
+  --puke-brown: #221100;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  color: white;
+}
+
+html {
+  background: repeat-y url("images/susurration_by_linked_memories_dg9m0es-fullview.jpg"), #332200;
+  background-size: 100%;
+  background-attachment: fixed;
+}
+
+body {
+  padding-bottom: 1em;
+}
+
+header {
+  text-align: center;
+  padding: 1em;
+  background-color: rgb(0 0 0 / 0.3);
+  backdrop-filter: blur(10px);
+  font-size: 1.5rem;
+  filter: drop-shadow(10px 0 50px white);
+}
+
+h1, h2, h3 {
+  text-align: center;
+}
+
+.content {
+  max-width: var(--content-width);
+  margin: 2em auto;
+  padding: 0 1em;
+
+  & :where(h2, h3, p) {
+    filter: drop-shadow(3px 0px 3px black);
+  }
+
+  & p {
+    margin: 1em auto;
+  }
+}
+
+.game-card {
+  display: flex;
+  gap: 2em;
+  margin: 2em 0;
+  padding: 2em;
+
+  box-shadow: 0 20px 30px var(--puke-brown);
+  backdrop-filter: blur(30px);
+
+  border-radius: 2em;
+
+  &:nth-child(odd) {
+    flex-direction: row-reverse;
+  }
+
+  & .card-image {
+    flex: 1;
+  }
+  & .card-content {
+    flex: 2;
+  }
+  & img {
+    max-height: 250px;
+    border-radius: 1em;
+  }
+}
