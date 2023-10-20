@@ -33,7 +33,7 @@ header {
   font-size: 1.5rem;
 }
 
-h1, h2 {
+h1, h2, h3 {
   text-align: center;
 }
 
@@ -151,10 +151,10 @@ fieldset {
   }
 }
 
-#hiscores {
+#leaderboard {
   width: 50%;
   min-width: fit-content;
-  margin: auto;
+  margin: 1em auto;
   overflow: clip;
 
   border-radius: .5em;
@@ -162,7 +162,7 @@ fieldset {
 
   font-size: 1.2rem;
 
-  & .score {
+  & high-score {
     display: flex;
     justify-content: space-between;
     padding: 1em;

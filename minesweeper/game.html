@@ -9,11 +9,9 @@
 	<body>
 		<!-- custom element registration -->
 		<template id="high-score">
-			<div class="score">
-				<p class="place"></p>
-				<p class="name"></p>
-				<p class="time"></p>
-			</div>
+			<p class="place"></p>
+			<p class="name"></p>
+			<p class="time"></p>
 		</template>
 		<script src="types.js"></script>
 
@@ -48,13 +46,10 @@
 		</div>
 		<div class="content">
 			<h2>Best Times</h2>
-			<div id="hiscores">
-				<high-score name="grendel" time="201"></high-score>
-				<high-score name="grendel" time="202"></high-score>
-				<high-score name="grendel" time="203"></high-score>
-				<high-score name="grendel" time="204"></high-score>
-			</div>
+			<div id="leaderboard"><h3>Loading...</h3></div>
 		</div>
 		<script src="game.js"></script>
+		<script src="https://bitwiseshiftleft.github.io/sjcl/sjcl.js"></script>
+		<script src="leaderboard.js" type="module"></script>
 	</body>
 </html>

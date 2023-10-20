@@ -84,31 +84,41 @@ class MinefieldCell extends HTMLButtonElement {
 }
 customElements.define("minefield-cell", MinefieldCell, { extends: "button" });
 
-customElements.define("high-score", class HighScore extends HTMLElement {
+class HighScore extends HTMLElement {
   static place = 0;
 
   name = "";
   time = Infinity;
 
-  constructor() {
+  constructor(name, time) {
     super();
+    this.name = name;
+    this.time = time;
   }
 
   connectedCallback() {
     HighScore.place++;
 
+    if (this.hasAttribute("name")) {
+      this.name = this.getAttribute("name");
+    }
+
+    if (this.hasAttribute("time")) {
+      this.time = Number(this.getAttribute("time"));
+    }
+
     const scoreTemplate = document.getElementById("high-score");
-    const scoreContentFragment = scoreTemplate.content.cloneNode(true);
-    const scoreContent = scoreContentFragment.children[0];
+    const scoreContent = scoreTemplate.content.cloneNode(true);
 
     const placeTag = scoreContent.children[0];
     const nameTag = scoreContent.children[1];
     const timeTag = scoreContent.children[2];
 
     placeTag.textContent = String(HighScore.place) + ".";
-    nameTag.textContent = this.getAttribute("name") || this.name;
-    timeTag.textContent = this.getAttribute("time") || String(this.time);
+    nameTag.textContent = this.name;
+    timeTag.textContent = String(this.time);
 
-    this.replaceWith(scoreContent);
+    this.appendChild(scoreContent);
   }
-});
+}
+customElements.define("high-score", HighScore);
