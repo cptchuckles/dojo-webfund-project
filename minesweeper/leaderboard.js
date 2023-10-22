@@ -61,7 +61,7 @@ async function recordHighScore() {
   const name = prompt("You win! Record your high score:");
 
   try {
-    const docRef = await addDoc(collection(db, "minesweeper-scores"), {
+    await addDoc(collection(db, "minesweeper-scores"), {
       name: name,
       time: window.game.timer,
     });
