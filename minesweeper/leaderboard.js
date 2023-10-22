@@ -24,31 +24,22 @@ function connectToFirestore() {
 
   const password = prompt("Unlock the high scores table:");
 
-  try {
-    const apiKey = sjcl.decrypt(password, JSON.stringify(sekrit));
+  const firebaseConfig = {
+    apiKey: sjcl.decrypt(password, JSON.stringify(sekrit)),
+    authDomain: "dojo-leaderboards.firebaseapp.com",
+    projectId: "dojo-leaderboards",
+    storageBucket: "dojo-leaderboards.appspot.com",
+    messagingSenderId: "571011663408",
+    appId: "1:571011663408:web:28283e6a4ab2f82780cff5"
+  };
 
-    const firebaseConfig = {
-      apiKey: apiKey,
-      authDomain: "dojo-leaderboards.firebaseapp.com",
-      projectId: "dojo-leaderboards",
-      storageBucket: "dojo-leaderboards.appspot.com",
-      messagingSenderId: "571011663408",
-      appId: "1:571011663408:web:28283e6a4ab2f82780cff5"
-    };
+  app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
 
-    app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-
-    onGameWin = () => {
-      if (window.game.isWon) {
-        recordHighScore();
-      }
+  onGameWin = () => {
+    if (window.game.isWon) {
+      recordHighScore();
     }
-  }
-  catch(e) {
-    console.error("Could not connect to Firebase:", e);
-    alert("Playing offline");
-    leaderboard.innerHTML = "<h3>Could not connect to Firebase</h3>";
   }
 }
 
@@ -57,20 +48,13 @@ function clearLeaderboard() {
 }
 
 async function fetchHighScores(scoresArray) {
-  try {
-    const querySnapshot = await getDocs(collection(db, "minesweeper-scores"));
-    querySnapshot.forEach(doc => {
-      const { name, time } = doc.data();
-      scoresArray.push(new HighScore(name, time));
-    });
-  }
-  catch(e) {
-    return false;
-  }
+  const querySnapshot = await getDocs(collection(db, "minesweeper-scores"));
+  querySnapshot.forEach(doc => {
+    const { name, time } = doc.data();
+    scoresArray.push(new HighScore(name, time));
+  });
 
   scoresArray.sort((a,b) => b.time - a.time);
-
-  return true;
 }
 
 async function recordHighScore() {
@@ -84,6 +68,7 @@ async function recordHighScore() {
   }
   catch(e) {
     console.error("Error recording high score:", e);
+    alert("There was an error recording your high score. Submit a screenshot to the administrator for recording");
     return;
   }
 
@@ -91,9 +76,7 @@ async function recordHighScore() {
 }
 
 async function updateLeaderboard() {
-  if (!await fetchHighScores(scores)) {
-    return;
-  }
+  await fetchHighScores(scores);
 
   clearLeaderboard();
 
@@ -102,5 +85,12 @@ async function updateLeaderboard() {
   }
 }
 
-connectToFirestore();
-updateLeaderboard();
+try {
+  connectToFirestore();
+  updateLeaderboard();
+}
+catch(e) {
+  console.error("Could not connect to Firebase:", e);
+  alert("Playing offline");
+  leaderboard.innerHTML = "<h3>Could not connect to Firebase</h3>";
+}
