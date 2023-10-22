@@ -15,16 +15,15 @@ const colorList = [
 ]
 
 /// Callback: Function(Void) -> Void
-let onGameWin = () => { return; };
+window.onGameWin = () => { return; };
 
 class MinesweeperGame {
   rows = 16;
   cols = 30;
   cells = [];
-  finished = false;
+  isFinished = false;
   firstBlood = true;
   clickRecursions = 0;
-  isWon = false;
 
   mines = startingMines;
   timer = 0;
@@ -53,7 +52,7 @@ class MinesweeperGame {
   }
 
   timerTick() {
-    if (this.finished || game !== this) {
+    if (this.isFinished || window.game !== this) {
       return;
     }
     this.timer++;
@@ -105,37 +104,40 @@ class MinesweeperGame {
     alert("YOU DIED");
     this.style.backgroundColor = "var(--exploded-color)";
     game.cells.forEach(cell => cell.disable());
-    game.finished = true;
+    game.isFinished = true;
+    game.checkWinCondition = () => false;
   }
 
   countDownToWinCheck() {
     this.clickRecursions--;
     if (this.clickRecursions === 0) {
-      this.checkWinCondition();
+      if (this.checkWinCondition()) {
+        for (const cell of this.cells) {
+          cell.flag(cell.hasMine, true);
+          cell.disable();
+        }
+
+        this.updateMines(-this.mines);
+        this.countDownToWinCheck = () => {};
+        window.onGameWin();
+      }
     }
   }
 
   checkWinCondition() {
-    if (this.finished) {
-      return;
-    }
-
     for (const cell of this.cells) {
       if (!cell.hasMine && !cell.isDisabled()) {
-        return;
+        return false;
       }
     }
 
-    this.finished = true;
+    this.isFinished = true;
+    this.checkWinCondition = () => {
+      this.checkWinCondition = () => false;
+      return true;
+    };
 
-    for (const cell of this.cells) {
-      cell.flag(cell.hasMine, true);
-      cell.disable();
-    }
-
-    this.isWon = true;
-    this.updateMines(-this.mines);
-    onGameWin();
+    return true;
   }
 
   onCellPressed(neighbors) {

@@ -36,8 +36,8 @@ function connectToFirestore() {
   app = initializeApp(firebaseConfig);
   db = getFirestore(app);
 
-  onGameWin = () => {
-    if (window.game.isWon) {
+  window.onGameWin = () => {
+    if (window.game.checkWinCondition()) {
       recordHighScore();
     }
   }
