@@ -68,7 +68,7 @@ async function fetchHighScores(scoresArray) {
     return false;
   }
 
-  scoresArray.sort((a,b) => a.time - b.time);
+  scoresArray.sort((a,b) => b.time - a.time);
 
   return true;
 }
@@ -97,12 +97,8 @@ async function updateLeaderboard() {
 
   clearLeaderboard();
 
-  scores.forEach(score => {
+  for (let score; score = scores.pop();) {
     leaderboard.appendChild(score);
-  });
-
-  while (scores.length > 0) {
-    scores.pop();
   }
 }
 
