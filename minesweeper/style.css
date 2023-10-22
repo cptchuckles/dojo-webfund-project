@@ -165,6 +165,7 @@ fieldset {
   min-height: fit-content;
   border-radius: .5em;
   overflow: clip;
+  background-color: var(--light-gray);
 }
 
 #leaderboard {
@@ -191,7 +192,6 @@ fieldset {
     justify-content: space-between;
     padding: 1em;
     border-bottom: 1px solid var(--dark-gray);
-    background-color: var(--light-gray);
 
     &:last-child {
       border-bottom: none;
