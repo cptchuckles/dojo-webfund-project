@@ -203,7 +203,7 @@ fieldset {
 
     & .name {
       flex: 1;
-      margin-left: 2ch;
+      margin: 0 2ch;
     }
   }
 }
