@@ -85,12 +85,16 @@ async function updateLeaderboard() {
   }
 }
 
-try {
-  connectToFirestore();
-  updateLeaderboard();
-}
-catch(e) {
-  console.error("Could not connect to Firebase:", e);
-  alert("Playing offline");
-  leaderboard.innerHTML = "<h3>Could not connect to Firebase</h3>";
+window.loadHighScores = function(link) {
+  link.parentElement.innerHTML = "Loading...";
+
+  try {
+    connectToFirestore();
+    updateLeaderboard();
+  }
+  catch(e) {
+    console.error("Could not connect to Firebase:", e);
+    alert("Playing offline");
+    leaderboard.innerHTML = "<h3>Could not connect to Firebase</h3>";
+  }
 }
