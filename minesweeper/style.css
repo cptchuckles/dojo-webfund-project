@@ -36,10 +36,7 @@ header {
 h1, h2, h3 {
   text-align: center;
   & a {
-    &:visited {
-      color: black;
-    }
-    color: black;
+    color: black !important;
     text-decoration: none;
   }
 }
